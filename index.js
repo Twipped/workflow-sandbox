@@ -1,6 +1,11 @@
 
-export default function Hello () {
+/**
+ * Hello function
+ *
+ * @returns {void}
+ */
+export default function hello () {
   console.log("Hello World");
 }
 
-Hello();
+hello();

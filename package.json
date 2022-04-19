@@ -6,12 +6,14 @@
   "type": "module",
   "scripts": {
     "lint": "eslint --fix .",
+    "docs": "jsdoc2md index.js lib/**/*.js > docs/API.md",
     "test": "node index.js"
   },
   "author": "Jocelyn Badgley <joc@twipped.com>",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^8.13.0",
-    "eslint-config-twipped": "^7.1.3"
+    "eslint-config-twipped": "^7.1.3",
+    "jsdoc-to-markdown": "^7.1.1"
   }
 }
