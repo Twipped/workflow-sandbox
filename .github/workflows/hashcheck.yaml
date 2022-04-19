@@ -14,7 +14,7 @@ jobs:
       docs-hash-previous: ${{ steps.docshash.outputs.docs-hash-previous }}
 
     env:
-      DOCS_HASH: hashFiles('**/*.md', '**/Gemfile.lock')
+      DOCS_HASH: ${{ hashFiles('**/*.md', '**/Gemfile.lock') }}
 
     steps:
       - uses: actions/checkout@v2
