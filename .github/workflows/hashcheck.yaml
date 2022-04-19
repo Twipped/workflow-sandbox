@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache node modules
+      - name: Cache docshash file between runs
         uses: actions/cache@v3
         env:
           cache-name: cache-docs-hash
@@ -46,9 +46,13 @@ jobs:
         name: Output hash of all markdown files
         run: |
           hash=$(find . -type f -iname "*.md" -exec shasum {} \;| shasum | cut -d" " -f1)
+          prev=$(cat .docshash 2>/dev/null)
+          echo "DOCS_HASH: $DOCS_HASH"
+          echo "LOCAL HASH: $hash"
+          echo "PREVIOUS HASH: $prev"
           echo "::set-output name=docs-hash::$DOCS_HASH"
           echo "::set-output name=docs-hash-current::$hash"
-          echo "::set-output name=docs-hash-previous::$(cat .docshash 2>/dev/null)"
+          echo "::set-output name=docs-hash-previous::$prev"
           echo "$hash"> .docshash
 
       - name: Upload the documents
@@ -69,4 +73,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: docs
+
+      - name: List files
+        run: ls -la
 
