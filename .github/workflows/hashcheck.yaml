@@ -13,9 +13,6 @@ jobs:
       docs-hash-current: ${{ steps.docshash.outputs.docs-hash-current }}
       docs-hash-previous: ${{ steps.docshash.outputs.docs-hash-previous }}
 
-    env:
-      DOCS_HASH: ${{ hashFiles('**/*.md', '**/Gemfile.lock') }}
-
     steps:
       - uses: actions/checkout@v2
 
@@ -24,7 +21,6 @@ jobs:
         env:
           cache-name: cache-docs-hash
         with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
           path: .docshash
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
@@ -36,9 +32,6 @@ jobs:
       - name: Install node dependencies
         run: npm ci
 
-      - name: Run Tests
-        run: npm test
-
       - name: Build Docs
         run: npm run docs
 
@@ -47,10 +40,8 @@ jobs:
         run: |
           hash=$(find . -type f -iname "*.md" -exec shasum {} \;| shasum | cut -d" " -f1)
           prev=$(cat .docshash 2>/dev/null)
-          echo "DOCS_HASH: $DOCS_HASH"
           echo "LOCAL HASH: $hash"
           echo "PREVIOUS HASH: $prev"
-          echo "::set-output name=docs-hash::$DOCS_HASH"
           echo "::set-output name=docs-hash-current::$hash"
           echo "::set-output name=docs-hash-previous::$prev"
           echo "$hash"> .docshash
@@ -63,6 +54,7 @@ jobs:
             **/*.md
             !node_modules/*
           retention-days: 1
+
   stage2:
     runs-on: ubuntu-latest
     needs: stage1
