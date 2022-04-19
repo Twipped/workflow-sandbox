@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      docs-hash: ${{ steps.docshash.outputs.docs-hash }}
       docs-hash-current: ${{ steps.docshash.outputs.docs-hash-current }}
       docs-hash-previous: ${{ steps.docshash.outputs.docs-hash-previous }}
 
@@ -22,7 +21,7 @@ jobs:
           cache-name: cache-docs-hash
         with:
           path: .docshash
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.ref }}
 
       - uses: actions/setup-node@v2
         with:
