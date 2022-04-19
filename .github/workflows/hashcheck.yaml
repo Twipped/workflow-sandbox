@@ -36,6 +36,9 @@ jobs:
       - name: Install node dependencies
         run: npm ci
 
+      - name: Run Tests
+        run: npm test
+
       - name: Build Docs
         run: npm run docs
 

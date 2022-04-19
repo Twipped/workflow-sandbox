@@ -1,0 +1,6 @@
+{
+  "extends": [ "twipped/node-esm" ],
+  "rules": {
+    "no-console": "off"
+  }
+}
