@@ -1,0 +1,11 @@
+{
+  "name": "workflow-sandbox",
+  "version": "1.0.0",
+  "description": "github actions testbed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jocelyn Badgley <joc@twipped.com>",
+  "license": "MIT"
+}
