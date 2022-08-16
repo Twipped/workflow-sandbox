@@ -1,0 +1,62 @@
+name: "Release, Please!"
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  packages: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  releasePlease:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_create: ${{ steps.release.outputs.releases_created }}
+      paths_released: ${{ steps.release.outputs.paths_released }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          default-branch: main
+          release-type: node
+
+      - name: Echo results
+        run: |
+          RESULT=$(cat << EOM
+          ${{ toJSON(steps.release.outputs) }}
+          EOM
+          )
+          echo "$RESULT"
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish Packages
+    needs: releasePlease
+    if: ${{ needs.releasePlease.outputs.paths_released != '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{fromJson(needs.releasePlease.outputs.paths_released)}}
+    env:
+      NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com/
+
+      - name: Install dependencies from npm
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build --workspace=${{ matrix.package }} --if-present
+
+      - name: Publish to Registry
+        run: npm publish --workspace=${{ matrix.package }}
