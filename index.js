@@ -5,7 +5,7 @@
  * @returns {void}
  */
 export default function hello () {
-  console.log("Hello World");
+  console.log("Hello Github!");
 }
 
 hello();

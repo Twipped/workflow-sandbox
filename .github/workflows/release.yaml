@@ -56,7 +56,10 @@ jobs:
         run: npm ci
 
       - name: Build packages
-        run: npm run build --workspace=${{ matrix.package }} --if-present
+        run: npm run build --if-present
+
+      - name: Build packages
+        run: npm run docs --if-present
 
       - name: Publish to Registry
-        run: npm publish --workspace=${{ matrix.package }}
+        run: npm publish
