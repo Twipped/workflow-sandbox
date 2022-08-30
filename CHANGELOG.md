@@ -1,0 +1,13 @@
+# Changelog
+
+## 1.0.0 (2022-08-30)
+
+
+### Features
+
+* Release! ([c3be263](https://github.com/Twipped/workflow-sandbox/commit/c3be263b39d3f828578a8c58e9a77823e80d548d))
+
+
+### Bug Fixes
+
+* release it ([3501ca0](https://github.com/Twipped/workflow-sandbox/commit/3501ca0890cfca0d02dd25089c11fe70e2762bdc))
