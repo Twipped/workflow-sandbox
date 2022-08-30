@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Twipped/workflow-sandbox/compare/v1.0.0...v1.0.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* release it again ([5f5aae6](https://github.com/Twipped/workflow-sandbox/commit/5f5aae64b1421615e57e30af0718c2ba450e5141))
+
 ## 1.0.0 (2022-08-30)
 
 
