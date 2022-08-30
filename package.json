@@ -1,5 +1,5 @@
 {
-  "name": "workflow-sandbox",
+  "name": "@twipped/workflow-sandbox",
   "version": "1.0.2",
   "description": "github actions testbed",
   "main": "index.js",
