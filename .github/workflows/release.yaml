@@ -11,11 +11,53 @@ permissions:
   pull-requests: write
 
 jobs:
-  releasePlease:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x, lts/*]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Cache node modules
+      id: cache-npm
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-node-modules
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build --if-present
+
+    - name: Lint
+      run: npm run lint --if-present
+
+    - name: Test
+      run: npm run test --if-present
+
+  please:
+    needs: test
     runs-on: ubuntu-latest
     outputs:
-      releases_create: ${{ steps.release.outputs.releases_created }}
-      paths_released: ${{ steps.release.outputs.paths_released }}
+      released: ${{ steps.release.outputs.release_created }}
     steps:
       - uses: google-github-actions/release-please-action@v3
         id: release
@@ -31,35 +73,31 @@ jobs:
           EOM
           )
           echo "$RESULT"
+
   publish:
+    needs: please
+    if: ${{ needs.please.outputs.released }}
     runs-on: ubuntu-latest
-    name: Publish Packages
-    needs: releasePlease
-    if: ${{ needs.releasePlease.outputs.paths_released != '' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        package: ${{fromJson(needs.releasePlease.outputs.paths_released)}}
-    env:
-      NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/
+    - uses: actions/checkout@v2
 
-      - name: Install dependencies from npm
-        run: npm ci
+    - name: Use Node.js 16
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16
+        registry-url: https://npm.pkg.github.com/
 
-      - name: Build packages
-        run: npm run build --if-present
+    - name: Install Dependencies
+      run: npm ci
 
-      - name: Build packages
-        run: npm run docs --if-present
+    - name: Build packages
+      run: npm run build --if-present
 
-      - name: Publish to Registry
-        run: npm publish
+    - name: Build docs
+      run: npm run docs --if-present
+
+    - name: NPM Publish
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
