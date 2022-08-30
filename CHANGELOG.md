@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/Twipped/workflow-sandbox/compare/v1.0.2...v1.0.3) (2022-08-30)
+
+
+### Bug Fixes
+
+* Can you only publish scoped packages? ([feb8688](https://github.com/Twipped/workflow-sandbox/commit/feb8688c34c3dfef4543d77ab050e425e5529012))
+
 ## [1.0.2](https://github.com/Twipped/workflow-sandbox/compare/v1.0.1...v1.0.2) (2022-08-30)
 
 
